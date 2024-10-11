@@ -1,4 +1,5 @@
 test
 out
-out.zip
+out_clean
+**.zip
 **/__pycache__

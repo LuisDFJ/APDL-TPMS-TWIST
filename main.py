@@ -14,7 +14,7 @@ SECTION     = {
 
 if __name__ == "__main__":
     c = 1
-    shutil.rmtree( "./out/" )
+    if os.path.isdir( "./out/" ): shutil.rmtree( "./out/" )
     
     for top in TOPOLOGY:
         for lay in LAYERS:
