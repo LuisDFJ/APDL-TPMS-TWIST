@@ -25,8 +25,9 @@ MK = MarkerRoulette()
 # Circular    : [ 0.011, 0.0105,0.010, 0.0095,0.009 ]
 
 filters = [
-    ("SECTION", "Rectangular"),
-    ("BASE", "0.022")
+    #("SECTION", "Circular"),
+    #("BASE", "0.022")
+    ("THICKNESS", "0.0006")
 ]
 title = ""
 for var, dat in filters:

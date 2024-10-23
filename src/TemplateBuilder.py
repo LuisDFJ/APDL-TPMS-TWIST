@@ -1,14 +1,17 @@
 from src.topology.gyroid import topology as gtop
+from src.topology.diamond import topology as dtop
 
 class TemplateBuilder:
-    N = 5
+    N = 2
     def __init__(self,
+        stype : str  = "shell",
         l : float    = 0.010,
         t : float    = 0.0005,
         lay : int    = 5,
         base : float = 0.020,
         top : str    = "gyroid", 
         sec : str    = "Rectangular" ):
+        self.stype = stype
         self.l = l
         self.t = t
         self.lay  = lay
@@ -20,22 +23,25 @@ class TemplateBuilder:
 
     def initRecipe( self ):
         self.recipe = [
-                ( f"./geometry/{self.top}/Cell_Points.ansys",       [] ),
-                ( f"./geometry/{self.top}/Triperiodic_Cell.ansys",  [] ),
-                ( f"./geometry/{self.top}/Unit_Cell.ansys",         [] ),
-                (  "./geometry/Base_Layer.ansys",                   [] ),
-                ( f"./geometry/{self.sec}.ansys",                   [self.base] ),
-                (  "./geometry/Repeat_Layers.ansys",                [self.lay] ),
-                (  "./postprocess.ansys",                           [] ),
+                ( f"./geometry/{self.stype}/{self.top}/Cell_Points.ansys",              [] ),
+                ( f"./geometry/{self.stype}/{self.top}/Patch_{TemplateBuilder.N}.ansys",[] ),
+                ( f"./geometry/{self.stype}/{self.top}/Triperiodic_Cell.ansys",         [] ),
+                ( f"./geometry/{self.stype}/{self.top}/Unit_Cell.ansys",                [] ),
+                ( f"./geometry/{self.stype}/Base_Layer.ansys",                          [] ),
+                ( f"./geometry/{self.stype}/section/{self.sec}.ansys",                  [self.base] ),
+                ( f"./geometry/{self.stype}/Repeat_Layers.ansys",                       [self.lay] ),
+                (  "./postprocess.ansys",                                               [] ),
         ]
 
     def compilePoints( self ):
         if self.top == "gyroid":
             top = gtop
+        elif self.top == "diamond":
+            top = dtop
 
         LINES, CORNERS = top( self.l )
         c = 1
-        with open( f"./geometry/{self.top}/Cell_Points.ansys", "w" ) as pFile:
+        with open( f"./geometry/{self.stype}/{self.top}/Cell_Points.ansys", "w" ) as pFile:
             for p in CORNERS:
                 print( f"K,{c},", end="", file=pFile )
                 print( *p, sep=",", file=pFile )
@@ -54,7 +60,7 @@ class TemplateBuilder:
                 TEXT_ARGS.append( pFile.read().format( *args ) )
 
         TEMPLATE = ""
-        with open( "./template.ansys", "r" ) as pFile:
+        with open( f"./geometry/{self.stype}/template.ansys", "r" ) as pFile:
             TEMPLATE = pFile.read()
         
         return TEMPLATE, TEXT_ARGS

@@ -1,0 +1,15 @@
+Height={0}
+
+VSEL,ALL
+CM,LAYER,VOLUME
+
+*DO,I,1,Height ! For I = 1 to 5:
+    LOCAL,11,CART,0,0,4*UC_L*I
+    CMSEL,S,LAYER
+    CSYS,0
+    VTRAN,11,ALL
+    CSDELE,11
+*ENDDO
+
+KSEL,ALL
+NUMMRG,KP,1.0E-6

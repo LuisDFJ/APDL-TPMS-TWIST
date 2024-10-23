@@ -1,0 +1,16 @@
+VSEL,ALL
+CM,UNITCELL,VOLU
+
+*DO,I,-1,1,1
+    *DO,J,-1,1,1
+        LOCAL,11,CART,I*UC_L*4,J*UC_L*4
+        CSYS,0
+        CMSEL,S,UNITCELL
+        *IF,ABS(I)+ABS(J),NE,0,THEN
+            VTRAN,11,ALL
+        *ENDIF
+        CSDELE,11
+    *ENDDO
+*ENDDO
+
+CMDELE,UNITCELL
