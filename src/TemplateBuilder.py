@@ -2,7 +2,6 @@ from src.topology.gyroid import topology as gtop
 from src.topology.diamond import topology as dtop
 
 class TemplateBuilder:
-    N = 2
     def __init__(self,
         stype : str  = "shell",
         l : float    = 0.010,
@@ -10,7 +9,8 @@ class TemplateBuilder:
         lay : int    = 5,
         base : float = 0.020,
         top : str    = "gyroid", 
-        sec : str    = "Rectangular" ):
+        sec : str    = "Rectangular",
+        N : int     = 5 ):
         self.stype = stype
         self.l = l
         self.t = t
@@ -18,13 +18,14 @@ class TemplateBuilder:
         self.base = base
         self.top  = top
         self.sec  = sec
+        self.N    = N
         self.initRecipe()
         self.compilePoints()
 
     def initRecipe( self ):
         self.recipe = [
                 ( f"./geometry/{self.stype}/{self.top}/Cell_Points.ansys",              [] ),
-                ( f"./geometry/{self.stype}/{self.top}/Patch_{TemplateBuilder.N}.ansys",[] ),
+                ( f"./geometry/{self.stype}/{self.top}/Patch_{self.N}.ansys",[] ),
                 ( f"./geometry/{self.stype}/{self.top}/Triperiodic_Cell.ansys",         [] ),
                 ( f"./geometry/{self.stype}/{self.top}/Unit_Cell.ansys",                [] ),
                 ( f"./geometry/{self.stype}/Base_Layer.ansys",                          [] ),
@@ -48,9 +49,9 @@ class TemplateBuilder:
                 c += 1
 
             for line in LINES:
-                for p in range( 1, TemplateBuilder.N ):
+                for p in range( 1, self.N ):
                     print( f"K,{c},", end="", file=pFile )
-                    print( *line( p/TemplateBuilder.N ), sep=",", file=pFile )
+                    print( *line( p/self.N ), sep=",", file=pFile )
                     c += 1
 
     def compileRecipe( self ):
