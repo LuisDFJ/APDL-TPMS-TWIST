@@ -11,7 +11,7 @@ FINISH
 !SHPP,OFF
 
 ! Cell dimensions
-ANG_STEPS=5
+ANG_STEPS=30
 ANG_DIS=0.0174533
 UC_L={0}/4
 UC_T={1}
