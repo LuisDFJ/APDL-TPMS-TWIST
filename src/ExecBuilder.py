@@ -3,21 +3,20 @@ import os
 
 def getRecipe( dir : str ):
     return f"""
-if exist {dir}\\Results_Angle_Torque.txt (
+IF exist {dir}\\Results_Angle_Torque.txt (
     echo Skipped: {dir} >> log.txt
-)
-else (
+) ELSE (
     echo Running {dir}
     ANSYS241.exe -b nolist -dir {dir}/res -j results -i {dir}/program.ansys -o {dir}/o.log
-    if exist {dir}\\res\\*.rst (
+    IF exist {dir}\\res\\*.rst (
         del /S {dir}\\res\\*.rst
-    ) else (
+    ) ELSE (
         echo Failed: {dir} >> log.txt
     )
-    if exist {dir}\\res\\*.rdb del /S {dir}\\res\\*.rdb
-    if exist {dir}\\res\\*.db del /S {dir}\\res\\*.db
-    if exist {dir}\\res\\*.esav del /S {dir}\\res\\*.esav
-    if exist {dir}\\res\\*.r001 del /S {dir}\\res\\*.r001
+    IF exist {dir}\\res\\*.rdb del /S {dir}\\res\\*.rdb
+    IF exist {dir}\\res\\*.db del /S {dir}\\res\\*.db
+    IF exist {dir}\\res\\*.esav del /S {dir}\\res\\*.esav
+    IF exist {dir}\\res\\*.r001 del /S {dir}\\res\\*.r001
     
     echo Completed: {dir} >> log.txt
 )       
