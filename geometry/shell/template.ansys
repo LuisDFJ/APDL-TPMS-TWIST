@@ -43,6 +43,7 @@ PR=0.33
 {7}
 
 ALLSEL
+APLOT
 
 ! ---------------- SHELL MESH --------------
 ET,1,SHELL281
