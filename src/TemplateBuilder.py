@@ -85,5 +85,6 @@ class TemplateBuilder:
             print( f"SECTION:   {self.sec}", file=pFile )
             print( f"BASE:      {self.base}", file=pFile )
             print( f"TOPOLOGY:  {self.top}", file=pFile )
+            print( f"LAYERS:    {self.lay + 1}", file=pFile )
 
     

@@ -1,6 +1,7 @@
 import os
 import sys
 import json
+from src.DataProcess import calcSlope
 
 def parseConfig( filepath : str ) -> dict :
     config = {}
@@ -36,6 +37,7 @@ if __name__ == "__main__":
                     formatRes.append( entry )
             with open( os.path.join( path, "results.json" ), "w" ) as pFile:
                 json.dump( formatRes, pFile, indent=2 )
+            calcSlope( os.path.join( path, "results.json" ) )
 
         else:
             print( "Directory does not exists." )
