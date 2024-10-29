@@ -1,6 +1,11 @@
 from src.topology.gyroid import topology as gtop
 from src.topology.diamond import topology as dtop
 
+def unpack( v : tuple | float, n : float = 1 ):
+    if isinstance( v, float ):
+        return tuple( [ v/n ] )
+    return [ i/n for i in v ]
+
 class TemplateBuilder:
     def __init__(self,
         stype : str  = "shell",
@@ -29,7 +34,7 @@ class TemplateBuilder:
                 ( f"./geometry/{self.stype}/{self.top}/Triperiodic_Cell.ansys",         [] ),
                 ( f"./geometry/{self.stype}/{self.top}/Unit_Cell.ansys",                [] ),
                 ( f"./geometry/{self.stype}/Base_Layer.ansys",                          [] ),
-                ( f"./geometry/{self.stype}/section/{self.sec}.ansys",                  [self.base] ),
+                ( f"./geometry/{self.stype}/section/{self.sec}.ansys",                  [ *self.base ] ),
                 ( f"./geometry/{self.stype}/Repeat_Layers.ansys",                       [self.lay] ),
                 (  "./postprocess.ansys",                                               [] ),
         ]
@@ -79,11 +84,12 @@ class TemplateBuilder:
             pFile.write( ANSYS_FILE )
 
     def writeConfigs( self, path : str ):
+        base = self.base if len( self.base ) > 1 else self.base[0]
         with open( f"{path}/config.txt", "w" ) as pFile:
             print( f"LENGTH:    {self.l}", file=pFile )
             print( f"THICKNESS: {self.t}", file=pFile )
             print( f"SECTION:   {self.sec}", file=pFile )
-            print( f"BASE:      {self.base}", file=pFile )
+            print( f"BASE:      {base}", file=pFile )
             print( f"TOPOLOGY:  {self.top}", file=pFile )
             print( f"LAYERS:    {self.lay + 1}", file=pFile )
 

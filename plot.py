@@ -4,6 +4,11 @@ import json
 import matplotlib.pyplot as plt
 from src import PLOTS_FILTERS
 
+plt.rcParams.update({
+    "text.usetex": True,
+    "font.family": "Helvetica"
+})
+
 class MarkerRoulette:
     MARKERS = ( '', '.', '*' )
     LINES   = ( '-', '--', '-.', ':' )
@@ -51,8 +56,8 @@ def plot( results : list ):
                 if len( dx ):
                     plt.annotate( title, ( dx[-1] - 0.00005, dy[-1] ) )
             
-            plt.xlabel( "Thickness [m]" )
-            plt.ylabel( "<GJ>/L [Nm/rad]" )
+            plt.xlabel( r"Thickness [$m$]" )
+            plt.ylabel( r"$\left<GJ\right>$ [$Nm^2/rad$]" )
             plt.grid( True )
     plt.show()
 

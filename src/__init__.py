@@ -1,12 +1,29 @@
+
+# Asymmetric Experiments
+
 SIMTYPE     = [ "shell" ]
 L           = [ (0.010,1) ]
-THICKNESS   = [ 0.0006 , 0.0005, 0.0004 ]
-LAYERS      = [ 6,8,10 ]
-TOPOLOGY    = [ ("diamond",2), ("gyroid",5) ]      
+THICKNESS   = [ 0.0009, 0.0008, 0.0007, 0.0006, 0.0005, 0.0004, 0.0003 ]
+LAYERS      = [ 9 ]
+TOPOLOGY    = [ ("diamond",2), ("gyroid",5) ]
 SECTION     = { 
     "Rectangular" : [ 0.022, 0.020, 0.018 ],
-    "Circular"    : [ 0.011, 0.0105, 0.0095,0.009 ]
+    "Circular"    : [ 0.011, 0.0105, 0.0095, 0.009 ],
+    "AsymmetricA"  : [ (0.022, 0.001), (0.020, 0.001), (0.018, 0.001) ]
 }
+
+# Symmetric Experiments
+
+#SIMTYPE     = [ "shell" ]
+#L           = [ (0.010,1) ]
+#THICKNESS   = [ 0.0006, 0.0005, 0.0004 ]
+#LAYERS      = [ 6,8,10 ]
+#TOPOLOGY    = [ ("diamond",2), ("gyroid",5) ]
+#SECTION     = { 
+#    "Rectangular" : [ 0.022, 0.020, 0.018 ],
+#    "Circular"    : [ 0.011, 0.0105, 0.0095,0.009 ],
+#    #"AsymmetricA"  : [ (0.022, 0.001) ]
+#}
 
 EXPERIMENTS   = []
 
