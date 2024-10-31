@@ -7,7 +7,7 @@ IF exist {dir}\\Results_Angle_Torque.txt (
     echo Skipped: {dir} >> log.txt
 ) ELSE (
     echo Running {dir}
-    ANSYS241.exe -acc nvidia -na 1 -np 6 -nt 2 -b nolist -dir {dir}/res -j results -i {dir}/program.ansys -o {dir}/o.log
+    ANSYS241.exe -dis -np 8 -b nolist -dir {dir}/res -j results -i {dir}/program.ansys -o {dir}/o.log
     IF exist {dir}\\res\\*.rst (
         del /S {dir}\\res\\*.rst
     ) ELSE (
