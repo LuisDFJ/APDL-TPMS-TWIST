@@ -4,6 +4,7 @@ from src.TemplateBuilder import TemplateBuilder, unpack
 from src.ExecBuilder import execBuilder
 from src import EXPERIMENTS
 
+import sys
 
 
 
@@ -18,5 +19,13 @@ if __name__ == "__main__":
         TB.compile( filepath )
         TB.writeConfigs( filepath )
     
-    execBuilder( "./out" )
+    cores = 4
+    for i in range( len( sys.argv ) - 1 ):
+        if sys.argv[i] == "--cores":
+            try:
+                cores = int( sys.argv[i+1] )
+            except:
+                cores = 4
+    print( f"Simulations Generated for DMP Processing using {cores} cores." )
+    execBuilder( "./out", cores )
                 
