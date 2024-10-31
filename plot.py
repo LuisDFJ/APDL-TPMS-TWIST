@@ -5,8 +5,8 @@ import matplotlib.pyplot as plt
 from src import PLOTS_FILTERS
 
 plt.rcParams.update({
-    "text.usetex": True,
-    "font.family": "Helvetica"
+#    "text.usetex": True,
+    "font.family": "Times New Roman"
 })
 
 class MarkerRoulette:
@@ -34,7 +34,7 @@ def filterData( data : list, match : tuple | list ):
     else:
         nData = []
         for entry in data:
-            if entry[ match[0] ] == match[1]:
+            if entry[ match[0] ] == match[1].replace(" ", ""):
                 nData.append( entry )
         return nData
     
@@ -42,22 +42,29 @@ def plot( results : list ):
     for top in PLOTS_FILTERS.keys():
         for sec in PLOTS_FILTERS[top].keys():
             plt.figure()
-            for filter in PLOTS_FILTERS[top][sec]:
-                data_x = []
-                data_y = []
-                title = " ".join( [ f"{s[0:3]}: {v}" for s, v in filter ] )
-                for entry in filterData( results, filter ):
-                    data_x.append( float( entry["THICKNESS"] ) )
-                    data_y.append( entry["SLOPE"] * float( entry["LAYERS"] ) * float( entry["LENGTH"] ) )
-                
-                dx = [ x for x,_ in sorted( zip( data_x, data_y ), key= lambda k : k[0] ) ]
-                dy = [ y for _,y in sorted( zip( data_x, data_y ), key= lambda k : k[0] ) ]
-                plt.plot( dx, dy, MK.next() )    
+            plt.title( f"Topology: {top.upper()} $\qquad$ Sec: {sec}", fontsize=18 )
+            for base in PLOTS_FILTERS[top][sec].keys():
+                try:
+                    title = "$\ell$: {0} mm".format( float( base ) * 1000 )
+                except:
+                    title = "$\ell$: {0} mm".format( [ b*1000 for b in base ] )
+                for filter in PLOTS_FILTERS[top][sec][base]:
+                    data_x = []
+                    data_y = []
+                    for entry in filterData( results, filter ):
+                        data_x.append( 1000 * float( entry["THICKNESS"] ) )
+                        data_y.append( (1000**2 ) * entry["SLOPE"] * float( entry["LAYERS"] ) * float( entry["LENGTH"] ) )
+                    
+                    dx = [ x for x,_ in sorted( zip( data_x, data_y ), key= lambda k : k[0] ) ]
+                    dy = [ y for _,y in sorted( zip( data_x, data_y ), key= lambda k : k[0] ) ]
+                    plt.plot( dx, dy, MK.next() )    
                 if len( dx ):
-                    plt.annotate( title, ( dx[-1] - 0.00005, dy[-1] ) )
+                    plt.annotate( title, ( dx[-1] - 0.005, dy[-1] + 10**3 ), fontsize=14 )
             
-            plt.xlabel( r"Thickness [$m$]" )
-            plt.ylabel( r"$\left<GJ\right>$ [$Nm^2/rad$]" )
+            plt.xlabel( r"Thickness $\left[mm\right]$", fontsize=16 )
+            plt.ylabel( r"$\left<GJ\right>$ $\left[N\cdot mm^2\right]$", fontsize=16 )
+            plt.xticks(fontsize=14)
+            plt.yticks(fontsize=14)
             plt.grid( True )
     plt.show()
 
