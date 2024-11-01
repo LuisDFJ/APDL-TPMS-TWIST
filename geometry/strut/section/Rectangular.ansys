@@ -1,0 +1,69 @@
+SIDE={0}
+TOLM=UC_L/2
+
+SELTOL,0.10E-6
+
+*DO,I,1,4,1
+    *IF,I,EQ,1,THEN
+        LOCAL,11,CART,SIDE/2
+        CLOCAL,12,CART,0,0,0,0,0,90
+    *ELSEIF,I,EQ,2,THEN
+        LOCAL,11,CART,-SIDE/2
+        CLOCAL,12,CART,0,0,0,0,0,90
+    *ELSEIF,I,EQ,3,THEN
+        LOCAL,11,CART,0,SIDE/2
+        CLOCAL,12,CART,0,0,0,0,90,0
+    *ELSE
+        LOCAL,11,CART,0,-SIDE/2
+        CLOCAL,12,CART,0,0,0,0,90,0
+    *ENDIF
+
+    *IF,MOD(SIDE,UC_L/2),NE,0,THEN
+        WPCSYS,-1,12
+        
+        !ALLSEL
+        !*GET,IAREA,AREA,,NUM,MAXD
+        !NUMSTR,AREA,IAREA
+
+        RECTNG,-0.02,0.02,-0.02,0.02
+        *GET,CPLANE,AREA,,NUM,MAXD
+
+        CSYS,0
+        *IF,I,EQ,1,THEN
+            LSEL,S,LOC,X,SIDE/2-TOLM,SIDE/2+TOLM
+        *ELSEIF,I,EQ,2,THEN
+            LSEL,S,LOC,X,-SIDE/2-TOLM,-SIDE/2+TOLM
+        *ELSEIF,I,EQ,3,THEN
+            LSEL,S,LOC,Y,SIDE/2-TOLM,SIDE/2+TOLM
+        *ELSE
+            LSEL,S,LOC,Y,-SIDE/2-TOLM,-SIDE/2+TOLM
+        *ENDIF
+        LSBA,ALL,CPLANE,SEPO
+    *ENDIF
+
+    CSDELE,11
+    CSDELE,12
+
+    CSYS,0
+    *IF,I,EQ,1,THEN
+        LSEL,S,LOC,X,SIDE/2,0.1
+    *ELSEIF,I,EQ,2,THEN
+        LSEL,S,LOC,X,-0.1,-SIDE/2
+    *ELSEIF,I,EQ,3,THEN
+        LSEL,S,LOC,Y,SIDE/2,0.1
+    *ELSE
+        LSEL,S,LOC,Y,-0.1,-SIDE/2
+    *ENDIF
+    LDELE,ALL
+
+*ENDDO
+
+! Clean lower order entities
+
+LSEL,ALL
+ALLSEL,BELOW
+
+KSEL,INVE
+KDELE,ALL
+
+SELTOL

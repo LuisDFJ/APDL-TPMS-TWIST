@@ -1,5 +1,6 @@
 from src.topology.gyroid import topology as gtop
 from src.topology.diamond import topology as dtop
+from src.topology.bcc import topology as btop
 
 def unpack( v : tuple | float, n : float = 1 ):
     if isinstance( v, float ):
@@ -28,22 +29,34 @@ class TemplateBuilder:
         self.compilePoints()
 
     def initRecipe( self ):
-        self.recipe = [
-                ( f"./geometry/{self.stype}/{self.top}/Cell_Points.ansys",              [] ),
-                ( f"./geometry/{self.stype}/{self.top}/Patch_{self.N}.ansys",[] ),
-                ( f"./geometry/{self.stype}/{self.top}/Triperiodic_Cell.ansys",         [] ),
-                ( f"./geometry/{self.stype}/{self.top}/Unit_Cell.ansys",                [] ),
-                ( f"./geometry/{self.stype}/Base_Layer.ansys",                          [] ),
-                ( f"./geometry/{self.stype}/section/{self.sec}.ansys",                  [ *self.base ] ),
-                ( f"./geometry/{self.stype}/Repeat_Layers.ansys",                       [self.lay] ),
-                (  "./postprocess.ansys",                                               [] ),
-        ]
+        if self.stype in [ "shell", "solid" ]:
+            self.recipe = [
+                    ( f"./geometry/{self.stype}/{self.top}/Cell_Points.ansys",              [] ),
+                    ( f"./geometry/{self.stype}/{self.top}/Patch_{self.N}.ansys",[] ),
+                    ( f"./geometry/{self.stype}/{self.top}/Triperiodic_Cell.ansys",         [] ),
+                    ( f"./geometry/{self.stype}/{self.top}/Unit_Cell.ansys",                [] ),
+                    ( f"./geometry/{self.stype}/Base_Layer.ansys",                          [] ),
+                    ( f"./geometry/{self.stype}/section/{self.sec}.ansys",                  [ *self.base ] ),
+                    ( f"./geometry/{self.stype}/Repeat_Layers.ansys",                       [self.lay] ),
+                    (  "./postprocess.ansys",                                               [] ),
+            ]
+        elif self.stype in [ "strut" ]:
+            self.recipe = [
+                    ( f"./geometry/{self.stype}/{self.top}/Cell_Points.ansys",              [] ),
+                    ( f"./geometry/{self.stype}/{self.top}/Unit_Cell.ansys",                [] ),
+                    ( f"./geometry/{self.stype}/Base_Layer.ansys",                          [self.N] ),
+                    ( f"./geometry/{self.stype}/section/{self.sec}.ansys",                  [ *self.base ] ),
+                    ( f"./geometry/{self.stype}/Repeat_Layers.ansys",                       [self.lay] ),
+                    (  "./postprocess.ansys",                                               [] ),
+            ]
 
     def compilePoints( self ):
         if self.top == "gyroid":
             top = gtop
         elif self.top == "diamond":
             top = dtop
+        elif self.top == "bcc":
+            top = btop
 
         LINES, CORNERS = top( self.l )
         c = 1

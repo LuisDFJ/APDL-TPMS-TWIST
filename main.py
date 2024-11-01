@@ -19,13 +19,16 @@ if __name__ == "__main__":
         TB.compile( filepath )
         TB.writeConfigs( filepath )
     
-    cores = 4
+    cores = None
     for i in range( len( sys.argv ) - 1 ):
         if sys.argv[i] == "--cores":
             try:
                 cores = int( sys.argv[i+1] )
             except:
-                cores = 4
-    print( f"Simulations Generated for DMP Processing using {cores} cores." )
+                cores = None
+    if not isinstance( cores, type(None) ):
+        print( f"Simulations Generated for DMP Processing using {cores} cores." )
+    else:
+        print( f"Simulations Generated for SMP Processing using default cores (4)." )
     execBuilder( "./out", cores )
                 

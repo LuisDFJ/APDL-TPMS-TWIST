@@ -2,5 +2,6 @@ env
 test
 out
 out_clean
+results
 **.zip
 **/__pycache__

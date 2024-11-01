@@ -1,0 +1,181 @@
+FINISH
+/CLEAR
+
+!/UIS,MSGPOP,4
+/PNUM,LINE,0
+/PNUM,AREA,0
+/PSYMB,CS,1
+
+/PREP7
+/NERR,10000,1000000
+!SHPP,OFF
+
+! Cell dimensions
+ANG_STEPS=30
+ANG_DIS=0.0174533
+UC_L={0}
+UC_T={1}
+
+! Mesh Size
+MS=0.001
+! Material Properties
+YM=409.56e6
+PR=0.33
+!BTOL,0.10E-6
+
+
+! Cell Points
+{2}
+
+! Unit Cell
+{3}
+
+! Base Layer
+{4}
+
+! Section Area
+{5}
+
+ALLSEL
+LPLOT
+
+! ---------------- SHELL MESH --------------
+ET,1,BEAM189
+
+TYPE,1
+MAT,1
+SECNUM,1
+
+!ESIZE,MS
+LMESH,ALL
+
+! === TEMP CONFIG ===
+CSYS,0
+TOFFST,273.15
+TREF,22
+! === MAT CONFIG  ===
+MP,EX,1,YM
+MP,PRXY,1,PR
+! === SEC CONFIG  ===
+SECTYPE,1,BEAM,CSOLID
+SECDATA,UC_T,16,3
+
+! Extrude Layers
+{6}
+
+LSEL,ALL
+
+! ---------------- SELECTIONS --------------
+
+SELTOL,0.10E-6
+
+TOP_Z=UC_L*Height+UC_L/2
+BOT_Z=-UC_L/2
+
+NSEL,S,LOC,Z,TOP_Z,TOP_Z
+CM,CONTACTPOINT,NODE
+
+NSEL,S,LOC,Z,BOT_Z,BOT_Z
+CM,FIXEDSUPPORT,NODE
+
+N,,0,0,TOP_Z
+*GET,PILOT_N,NODE,,NUM,MAXD
+
+SELTOL
+
+! ---------------- FIXED SUPORT --------------
+
+CMSEL,S,FIXEDSUPPORT
+D,ALL,ALL
+NSEL,all
+
+! ---------------- REMOTE DISPLACEMENT -------
+! === CONTACT ELEMENTS ===
+ET,2,CONTA175
+KEYOPT,2,2,2    ! Contact Algorithm: MPC
+KEYOPT,2,12,5   ! Behaviour of Contact Surface: Bonded Always (5) or Bonded Initial (6)
+KEYOPT,2,4,0    ! Surface-Based Constraint: Force-Distributed (1) or Rigid (0)
+
+CMSEL,S,CONTACTPOINT
+*GET,MIN_CE,NODE,,NUM,MIN
+*GET,MAX_CE,NODE,,NUM,MAX
+*GET,N_CE,NODE,,COUNT
+
+MAT,2
+REAL,2
+TYPE,2
+SECNUM,0
+
+CURR_N = MIN_CE
+*DO,I,1,N_CE
+    E,CURR_N
+    CURR_N = NDNEXT(CURR_N)
+*ENDDO
+
+NSEL,ALL
+
+
+! === PILOT NODES ===
+ET,3,TARGE170
+KEYOPT,3,2,1        ! Boundary Conditions: Specified by User
+KEYOPT,3,4,0        ! DoF to be Constrained: RZ RY RX UZ UY UX
+KEYOPT,3,6,0        ! Symmetry Condition
+KEYOPT,3,7,0        ! Weighting Factor:Calculated Internally
+KEYOPT,3,10,0       ! Stress Stiffening
+
+!*GET,PILOT_N_COUPLE,ELEM,,MAXD
+
+TYPE,3
+MAT,2
+REAL,2
+SECNUM,0
+TSHAP,PILO
+E,PILOT_N
+TSHAP
+
+! === BOUNDARY CONDITION ===
+D,PILOT_N,UX,0.
+D,PILOT_N,UY,0.
+
+NSEL,ALL
+/ESHAPE,1
+/PBC,U,1
+/PBC,ROT,1
+EPLOT
+
+SHPP,DEFAULT
+
+! ----- SOLUTION -------
+/SOLU
+
+ANTYPE,STATIC,NEW
+NLGEOM,ON               ! Geometri Nonlinearities ON
+
+! ------ SOLVER CONTROLS -----
+!EQSLV,SPARSE,,,,,1      ! Solver: Sparse Solver
+EQSLV,PCG,1e-8,,,,,,1   ! Solver: Preconditioned Conjugate Gradient Solver
+CNCHECK,DMP             ! Program Controlled Contact - Distributed Memory Parallel
+AUTOTS,ON               ! Automatic Time Stepping
+
+CNTR,PRINT,1
+DMPOPTION,EMAT,NO
+DMPOPTION,ESAV,NO
+
+RESCONTROL,DEFINE,LAST,LAST,,DELE
+
+OUTRES,ALL,ALL
+
+*DO,I,1,ANG_STEPS
+    NSUBST,1,30,1           ! General Substeps 30 Max Substeps
+    TIME,1.0*I
+    D,PILOT_N,ROTZ,ANG_DIS*I
+    ALLSEL
+    SOLVE
+*ENDDO
+
+FINISH
+
+! POSTPROCESSING
+{7}
+
+FINISH

@@ -1,15 +1,26 @@
+# BCC Strut Experiments
+
+SIMTYPE     = [ "strut" ]
+L           = [ (0.005,1) ]
+THICKNESS   = [ 0.0009, 0.0008, 0.0007, 0.0006, 0.0005, 0.0004, 0.0003 ]
+LAYERS      = [ 19 ]
+TOPOLOGY    = [ ("bcc",4) ]
+SECTION     = { 
+    "Circular" : [ 0.014 ],
+}
+
 # Free-end Experiments
 
-SIMTYPE     = [ "shell" ]
-L           = [ (0.010,1) ]
-THICKNESS   = [ 0.0005 ]
-LAYERS      = [ 9 ]
-TOPOLOGY    = [ ("diamond",2), ("gyroid",5) ]
-SECTION     = { 
-    "Rectangular" : [ 0.020 ],
-    "Circular"    : [ 0.011 ],
-    "AsymmetricA"  : [ (0.020, 0.001) ]
-}
+#SIMTYPE     = [ "shell" ]
+#L           = [ (0.010,1) ]
+#THICKNESS   = [ 0.0005 ]
+#LAYERS      = [ 9 ]
+#TOPOLOGY    = [ ("diamond",2), ("gyroid",5) ]
+#SECTION     = { 
+#    "Rectangular" : [ 0.020 ],
+#    "Circular"    : [ 0.011 ],
+#    "AsymmetricA"  : [ (0.020, 0.001) ]
+#}
 
 # Asymmetric Experiments
 

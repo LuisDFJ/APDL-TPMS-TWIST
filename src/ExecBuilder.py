@@ -1,13 +1,17 @@
 import os
 
 
-def getRecipe( dir : str, cores : int ):
+def getRecipe( dir : str, cores : int | None ):
+    if isinstance( cores, type(None) ):
+        parallel_processing = ""
+    else:
+        parallel_processing = f"-dis -np {cores} "
     return f"""
 IF exist {dir}\\Results_Angle_Torque.txt (
     echo Skipped: {dir} >> log.txt
 ) ELSE (
     echo Running {dir}
-    ANSYS241.exe -dis -np {cores} -b nolist -dir {dir}/res -j results -i {dir}/program.ansys -o {dir}/o.log
+    ANSYS241.exe {parallel_processing}-b nolist -dir {dir}/res -j results -i {dir}/program.ansys -o {dir}/o.log
     IF exist {dir}\\res\\*.rst (
         del /S {dir}\\res\\*.rst
     ) ELSE (
@@ -22,7 +26,7 @@ IF exist {dir}\\Results_Angle_Torque.txt (
 )       
 """
 
-def execBuilder( path : str, cores : int = 4 ):
+def execBuilder( path : str, cores : int | None = None ):
     with open( f"{path}/run.bat", "w" ) as pFile:
         print( "echo Log File: >> log.txt", file=pFile )
         for dir in next( os.walk( path ) )[1]:
