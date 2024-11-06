@@ -16,7 +16,8 @@ class TemplateBuilder:
         base : float = 0.020,
         top : str    = "gyroid", 
         sec : str    = "Rectangular",
-        N : int     = 5 ):
+        N : int      = 5,
+        post : str   = "default" ):
         self.stype = stype
         self.l = l
         self.t = t
@@ -25,6 +26,7 @@ class TemplateBuilder:
         self.top  = top
         self.sec  = sec
         self.N    = N
+        self.post = post
         self.initRecipe()
         self.compilePoints()
 
@@ -38,7 +40,7 @@ class TemplateBuilder:
                     ( f"./geometry/{self.stype}/Base_Layer.ansys",                          [] ),
                     ( f"./geometry/{self.stype}/section/{self.sec}.ansys",                  [ *self.base ] ),
                     ( f"./geometry/{self.stype}/Repeat_Layers.ansys",                       [self.lay] ),
-                    (  "./postprocess.ansys",                                               [] ),
+                    ( f"./postprocess/{self.post}.ansys",                                               [] ),
             ]
         elif self.stype in [ "strut" ]:
             self.recipe = [
@@ -47,7 +49,7 @@ class TemplateBuilder:
                     ( f"./geometry/{self.stype}/Base_Layer.ansys",                          [self.N] ),
                     ( f"./geometry/{self.stype}/section/{self.sec}.ansys",                  [ *self.base ] ),
                     ( f"./geometry/{self.stype}/Repeat_Layers.ansys",                       [self.lay] ),
-                    (  "./postprocess.ansys",                                               [] ),
+                    ( f"./postprocess/{self.post}.ansys",                                               [] ),
             ]
 
     def compilePoints( self ):
