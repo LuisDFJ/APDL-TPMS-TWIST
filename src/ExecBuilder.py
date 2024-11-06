@@ -1,11 +1,11 @@
 import os
 
 def progressBar(i,N):
-    E = 25
-    progress = "#"*int( E*(i/N) ) + " "*(E - int( E*(i/N) ) )
+    E = 50
+    progress = r"[102m" + " "*int( E*(i/N) ) + r"[100m" + (" "*(E - int( E*(i/N) ) ) + r"[0m" )
     return f"""
 cls
-echo Progress: [{progress}] {i}/{N}
+echo Progress: {progress} {i}/{N}
 """
 
 def getPreamble():

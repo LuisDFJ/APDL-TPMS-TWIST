@@ -1,7 +1,3 @@
-from src.topology.gyroid import topology as gtop
-from src.topology.diamond import topology as dtop
-from src.topology.bcc import topology as btop
-
 def unpack( v : tuple | float, n : float = 1 ):
     if isinstance( v, float ):
         return tuple( [ v/n ] )
@@ -54,11 +50,22 @@ class TemplateBuilder:
 
     def compilePoints( self ):
         if self.top == "gyroid":
-            top = gtop
+            from src.topology.shell.gyroid import topology as top
         elif self.top == "diamond":
-            top = dtop
+            if self.stype == "shell":
+                from src.topology.shell.diamond import topology as top
+            elif self.stype == "strut":
+                from src.topology.strut.diamond import topology as top
         elif self.top == "bcc":
-            top = btop
+            from src.topology.strut.bcc import topology as top
+        elif self.top == "fcc":
+            from src.topology.strut.fcc import topology as top
+        elif self.top == "octet":
+            from src.topology.strut.octet import topology as top
+        elif self.top == "cubic":
+            from src.topology.strut.cubic import topology as top
+        elif self.top == "fluorite":
+            from src.topology.strut.fluorite import topology as top
 
         LINES, CORNERS = top( self.l )
         c = 1
